@@ -2,7 +2,7 @@
   "name": "chain-guard",
   "private": true,
   "version": "1.0.0",
-  "description": "Proactive Supply Chain Attack Monitoring - Know when your apps turn against you",
+  "description": "ChainGuardia - Proactive Supply Chain Attack Monitoring - Know when your apps turn against you",
   "type": "module",
   "scripts": {
     "dev": "vite",

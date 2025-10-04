@@ -68,7 +68,7 @@ const checkJwt = hasAuthConfig
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
-    message: 'ChainGuard API is running',
+    message: 'ChainGuardia API is running',
     timestamp: new Date().toISOString(),
   });
 });

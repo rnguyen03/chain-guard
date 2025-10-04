@@ -1,48 +1,28 @@
-# ChainGuard 🛡️# React + TypeScript + Vite
+# ChainGuardia 🛡️
 
+> **"Know when your apps turn against you."**
 
+**Proactive Supply Chain Attack Monitoring Platform**
 
-> **"Know when your apps turn against you."**This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
+## 🎯 The Problem
 
+In today's digital workplace, employees use dozens of third-party apps—from productivity tools to niche SaaS services. While these apps increase efficiency, they also open the door to **supply chain attacks**—where attackers compromise trusted vendors or software updates to infiltrate organizations.
 
-**Proactive Supply Chain Attack Monitoring Platform**While this project uses React, Vite supports many popular JS frameworks. [See all the supported frameworks](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+Companies often don't know when a system their employees rely on becomes vulnerable. Even if critical vulnerabilities or breaches are disclosed, organizations struggle to track which apps are affected and respond quickly.
 
+---
 
----## Deploy Your Own
+## 💡 The Solution
 
+**ChainGuardia** (formerly SecuTrack) is a monitoring platform that proactively scans and aggregates information about the applications employees use. It cross-checks:
 
-
-## 🎯 The ProblemDeploy your own Vite project with Vercel.
-
-
-
-In today's digital workplace, employees use dozens of third-party apps—from productivity tools to niche SaaS services. While these apps increase efficiency, they also open the door to **supply chain attacks**—where attackers compromise trusted vendors or software updates to infiltrate organizations.[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
-
-
-
-Companies often don't know when a system their employees rely on becomes vulnerable. Even if critical vulnerabilities or breaches are disclosed, organizations struggle to track which apps are affected and respond quickly._Live Example: https://vite-react-example.vercel.app_
-
-
-
----### Deploying From Your Terminal
-
-
-
-## 💡 The SolutionYou can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-
-
-**ChainGuard** is a monitoring platform that proactively scans and aggregates information about the applications employees use. It cross-checks:```shell
-
-$ vercel
-
-- 🔒 **Security databases** (CVE reports, NVD feeds, vendor security advisories)```
-
+- 🔒 **Security databases** (CVE reports, NVD feeds, vendor security advisories)
 - 📰 **Trusted news outlets** and blogs for emerging supply chain attack reports
 - ⚡ **Real-time monitoring** of vulnerabilities affecting your application stack
 
-Whenever an app is flagged as vulnerable, ChainGuard automatically alerts IT/security teams and provides recommended actions.
+Whenever an app is flagged as vulnerable, ChainGuardia automatically alerts IT/security teams and provides recommended actions.
 
 ---
 
@@ -63,6 +43,8 @@ Whenever an app is flagged as vulnerable, ChainGuard automatically alerts IT/sec
 - 🎨 **Severity Classification**: Color-coded CRITICAL, HIGH, MEDIUM, LOW alerts
 - 📱 **Responsive Design**: Works on desktop, tablet, and mobile
 - 🔔 **Status Management**: Acknowledge and mark vulnerabilities as mitigated
+- 🔐 **Authentication**: Secure user management with Auth0
+- 💾 **Persistent Storage**: MongoDB integration for data persistence
 
 ---
 
@@ -70,9 +52,12 @@ Whenever an app is flagged as vulnerable, ChainGuard automatically alerts IT/sec
 
 - **Frontend**: React 18 + TypeScript + Vite
 - **Styling**: Tailwind CSS
-- **Routing**: React Router v6
+- **Routing**: React Router v7
 - **Icons**: Lucide React
 - **CSV Parsing**: PapaParse
+- **Backend**: Node.js + Express
+- **Database**: MongoDB + Mongoose
+- **Authentication**: Auth0
 - **API**: NVD CVE Database API
 - **HTTP Client**: Axios
 
@@ -84,6 +69,8 @@ Whenever an app is flagged as vulnerable, ChainGuard automatically alerts IT/sec
 
 - Node.js 18+ 
 - npm or yarn
+- MongoDB (local or Atlas)
+- Auth0 account (for authentication)
 
 ### Setup
 
@@ -95,8 +82,16 @@ cd chain-guard
 # Install dependencies
 npm install
 
-# Start development server
-npm run dev
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your MongoDB URI and Auth0 credentials
+
+# Start development server (frontend + backend)
+npm run dev:all
+
+# Or start individually:
+npm run dev        # Frontend only
+npm run server     # Backend only
 
 # Build for production
 npm run build
@@ -147,14 +142,22 @@ chain-guard/
 │   ├── components/          # React components
 │   │   ├── AppInventory.tsx        # Application management
 │   │   ├── VulnerabilityList.tsx   # Vulnerability display
-│   │   └── DashboardOverview.tsx   # Dashboard stats
+│   │   ├── DashboardOverview.tsx  # Dashboard stats
+│   │   ├── AccountView.tsx         # User account management
+│   │   └── AuthCallback.tsx        # Auth0 callback handler
 │   ├── services/            # API and business logic
+│   │   ├── apiService.ts           # Backend API client
 │   │   └── vulnerabilityService.ts # CVE fetching & matching
 │   ├── types/              # TypeScript interfaces
 │   │   └── index.ts               # Type definitions
 │   ├── App.tsx             # Main application component
 │   ├── main.tsx            # Entry point
 │   └── index.css           # Global styles
+├── server/                 # Backend API
+│   ├── routes/             # API routes
+│   ├── models/             # Database models
+│   ├── middleware/          # Express middleware
+│   └── config/             # Database configuration
 ├── public/                 # Static assets
 ├── package.json
 ├── tailwind.config.js      # Tailwind configuration
@@ -167,7 +170,7 @@ chain-guard/
 
 ### NVD CVE Database
 
-ChainGuard integrates with the National Vulnerability Database (NVD) API:
+ChainGuardia integrates with the National Vulnerability Database (NVD) API:
 
 ```typescript
 // Fetch CVEs from NVD
@@ -233,20 +236,21 @@ This project was built for a 36-hour hackathon with a focus on:
 - ✅ Scalable architecture
 
 **Future Enhancements:**
-- Backend API with persistent database (MongoDB/PostgreSQL)
 - SSO integration (Okta, Azure AD)
 - Slack/Teams webhook notifications
 - Automated scanning schedules
 - Export reports (PDF/CSV)
 - Multi-tenant support
 - Advanced filtering and search
+- Real-time vulnerability monitoring
+- Machine learning for better app-vulnerability matching
 
 ---
 
 ## 👥 Team
 
-Built with ❤️ by the ChainGuard team
+Built with ❤️ by the ChainGuardia team
 
 ---
 
-**ChainGuard** - Protecting organizations from supply chain attacks, one vulnerability at a time.
+**ChainGuardia** - Protecting organizations from supply chain attacks, one vulnerability at a time.

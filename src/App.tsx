@@ -5,16 +5,19 @@ import { VulnerabilityList } from './components/VulnerabilityList';
 import { DashboardOverview } from './components/DashboardOverview';
 import { AccountView } from './components/AccountView';
 import { AuthCallback } from './components/AuthCallback';
-import { Application, Vulnerability, DashboardStats } from './types';
-import { getMockData, matchVulnerabilitiesToApps } from './services/vulnerabilityService';
+import { AlertCenter } from './components/AlertCenter';
+import { Application, Vulnerability, DashboardStats, Alert } from './types';
+import { getMockData, enhancedMatchVulnerabilitiesToApps } from './services/vulnerabilityService';
+import { createVulnerabilityAlerts, simulateNewAlerts } from './services/alertService';
 import { applicationApi } from './services/apiService';
-import { LayoutDashboard, Package, AlertTriangle, Menu, X, User, LogOut, LogIn } from 'lucide-react';
+import { LayoutDashboard, Package, AlertTriangle, Menu, X, User, LogOut, LogIn, Bell } from 'lucide-react';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { setAuthTokenProvider } from './services/apiService';
 
 function App() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [apiConnected, setApiConnected] = useState(false);
@@ -63,11 +66,34 @@ function App() {
   // Re-match vulnerabilities when applications change
   useEffect(() => {
     if (applications.length > 0 && vulnerabilities.length > 0) {
-      const matched = matchVulnerabilitiesToApps(vulnerabilities, applications);
+      const matched = enhancedMatchVulnerabilitiesToApps(vulnerabilities, applications);
       setVulnerabilities(matched);
+      
+      // Generate alerts for vulnerabilities affecting tracked apps
+      const newAlerts = createVulnerabilityAlerts(matched, applications);
+      setAlerts(prevAlerts => {
+        // Avoid duplicate alerts
+        const existingIds = new Set(prevAlerts.map(alert => alert.vulnerabilityId));
+        const uniqueNewAlerts = newAlerts.filter(alert => !existingIds.has(alert.vulnerabilityId));
+        return [...prevAlerts, ...uniqueNewAlerts];
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applications.length]);
+
+  // Simulate new alerts periodically (for demo purposes)
+  useEffect(() => {
+    if (applications.length > 0) {
+      const interval = setInterval(() => {
+        const newAlerts = simulateNewAlerts(applications, alerts);
+        if (newAlerts.length > alerts.length) {
+          setAlerts(newAlerts);
+        }
+      }, 30000); // Check every 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [applications, alerts]);
 
   useEffect(() => {
     setAuthTokenProvider(async () => {
@@ -148,6 +174,16 @@ function App() {
     );
   };
 
+  const handleMarkAlertsAsRead = (alertIds: string[]) => {
+    setAlerts(alerts.map(alert => 
+      alertIds.includes(alert.id) ? { ...alert, read: true } : alert
+    ));
+  };
+
+  const handleDeleteAlert = (alertId: string) => {
+    setAlerts(alerts.filter(alert => alert.id !== alertId));
+  };
+
   const calculateStats = (): DashboardStats => {
     return {
       totalApps: applications.length,
@@ -166,13 +202,14 @@ function App() {
           mobileMenuOpen={mobileMenuOpen} 
           setMobileMenuOpen={setMobileMenuOpen}
           apiConnected={apiConnected}
+          alerts={alerts}
         />
         
         {loading ? (
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="text-center">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading ChainGuard...</p>
+              <p className="text-gray-600">Loading ChainGuardia...</p>
             </div>
           </div>
         ) : (
@@ -208,6 +245,16 @@ function App() {
                   />
                 }
               />
+              <Route
+                path="/alerts"
+                element={
+                  <AlertCenter
+                    alerts={alerts}
+                    onMarkAsRead={handleMarkAlertsAsRead}
+                    onDeleteAlert={handleDeleteAlert}
+                  />
+                }
+              />
               <Route 
                 path="/callback"
                 element={<AuthCallback />}
@@ -228,10 +275,11 @@ function App() {
   );
 }
 
-function Navigation({ mobileMenuOpen, setMobileMenuOpen, apiConnected }: { 
+function Navigation({ mobileMenuOpen, setMobileMenuOpen, apiConnected, alerts }: { 
   mobileMenuOpen: boolean; 
   setMobileMenuOpen: (open: boolean) => void;
   apiConnected: boolean;
+  alerts: Alert[];
 }) {
   const location = useLocation();
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -256,6 +304,7 @@ function Navigation({ mobileMenuOpen, setMobileMenuOpen, apiConnected }: {
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/applications', label: 'Applications', icon: Package },
     { path: '/vulnerabilities', label: 'Vulnerabilities', icon: AlertTriangle },
+    { path: '/alerts', label: 'Alerts', icon: Bell },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -269,7 +318,7 @@ function Navigation({ mobileMenuOpen, setMobileMenuOpen, apiConnected }: {
               <div className="bg-blue-600 p-2 rounded-lg">
                 <Package className="text-white" size={24} />
               </div>
-              <span className="text-xl font-bold text-gray-900">ChainGuard</span>
+              <span className="text-xl font-bold text-gray-900">ChainGuardia</span>
             </Link>
             {apiConnected && (
               <span className="ml-3 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full font-semibold">
@@ -285,20 +334,30 @@ function Navigation({ mobileMenuOpen, setMobileMenuOpen, apiConnected }: {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            {navItems.map(({ path, label, icon: Icon }) => (
-              <Link
-                key={path}
-                to={path}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  isActive(path)
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <Icon size={18} />
-                {label}
-              </Link>
-            ))}
+            {navItems.map(({ path, label, icon: Icon }) => {
+              const unreadAlerts = alerts.filter(alert => !alert.read).length;
+              const showBadge = path === '/alerts' && unreadAlerts > 0;
+              
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors relative ${
+                    isActive(path)
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Icon size={18} />
+                  {label}
+                  {showBadge && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                      {unreadAlerts > 9 ? '9+' : unreadAlerts}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
             
             {/* User Menu */}
             {isAuthenticated && user ? (
@@ -377,21 +436,31 @@ function Navigation({ mobileMenuOpen, setMobileMenuOpen, apiConnected }: {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-gray-200">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navItems.map(({ path, label, icon: Icon }) => (
-              <Link
-                key={path}
-                to={path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                  isActive(path)
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <Icon size={18} />
-                {label}
-              </Link>
-            ))}
+            {navItems.map(({ path, label, icon: Icon }) => {
+              const unreadAlerts = alerts.filter(alert => !alert.read).length;
+              const showBadge = path === '/alerts' && unreadAlerts > 0;
+              
+              return (
+                <Link
+                  key={path}
+                  to={path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors relative ${
+                    isActive(path)
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Icon size={18} />
+                  {label}
+                  {showBadge && (
+                    <span className="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                      {unreadAlerts > 9 ? '9+' : unreadAlerts}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
             
             {/* Mobile User Menu */}
             {isAuthenticated && user ? (

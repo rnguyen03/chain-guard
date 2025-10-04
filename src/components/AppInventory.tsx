@@ -68,7 +68,10 @@ export const AppInventory: React.FC<AppInventoryProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Application Inventory</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">Application Inventory</h2>
+          <p className="text-sm text-gray-600 mt-1">Track applications for vulnerability monitoring</p>
+        </div>
         <div className="flex gap-2">
           <label className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
             <Upload size={18} />

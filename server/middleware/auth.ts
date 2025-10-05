@@ -3,6 +3,59 @@ import { Request, Response, NextFunction } from 'express';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
 
+export const enableCors = (req: Request, res: Response, next: NextFunction) => {
+  const originsEnv = process.env.FRONTEND_ORIGINS || '';
+  const allowedOrigins = originsEnv.split(',').map(s => s.trim()).filter(Boolean);
+  const origin = (req.headers.origin as string) || '';
+
+  if (allowedOrigins.length && origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else if (process.env.NODE_ENV !== 'production') {
+    // allow everything in dev for convenience
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+};
+
+/**
+ * For Vercel serverless handlers: call at top of handler.
+ * Example:
+ *   import { setCorsHeaders } from './middleware/auth';
+ *   export default function handler(req, res) {
+ *     if (setCorsHeaders(req, res)) return; // handled OPTIONS
+ *     ...
+ *   }
+ */
+export function setCorsHeaders(req: VercelRequest, res: VercelResponse): boolean {
+  const originsEnv = process.env.FRONTEND_ORIGINS || '';
+  const allowedOrigins = originsEnv.split(',').map(s => s.trim()).filter(Boolean);
+  const origin = (req.headers.origin as string) || '';
+
+  if (allowedOrigins.length && origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else if (process.env.NODE_ENV !== 'production') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return true;
+  }
+  return false;
+}
+
 // Auth0 JWT validation middleware for Express (local development)
 export const checkJwt = auth({
   audience: process.env.AUTH0_AUDIENCE,

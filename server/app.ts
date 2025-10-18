@@ -25,7 +25,7 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 /* ───────────────────────────────────────────────────────────
@@ -42,7 +42,8 @@ app.get('/api/health', (_req, res) => {
 /* ───────────────────────────────────────────────────────────
    Error handler
    ─────────────────────────────────────────────────────────── */
-app.use((err: Error & { status?: number; statusCode?: number; code?: string }, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((
+  err: Error & { status?: number; statusCode?: number; code?: string }, _req: express.Request, res: express.Response, next: express.NextFunction) => {
   const status = err.status || err.statusCode;
   if (
     status === 400 ||
@@ -60,7 +61,8 @@ app.use((err: Error & { status?: number; statusCode?: number; code?: string }, _
 app.use((
   err: Error & { status?: number; statusCode?: number },
   _req: express.Request,
-  res: express.Response
+  res: express.Response,
+  _next: express.NextFunction
 ) => {
   const status = err.status || err.statusCode || 500;
   if (NODE_ENV !== 'test') console.error(err.stack || err);
@@ -68,6 +70,18 @@ app.use((
     message: 'Something went wrong!',
     error: NODE_ENV === 'development' ? (err.message || 'Internal Server Error') : undefined,
   });
+});
+
+app.post('/api/explain-vulnerability', async (err, req, res, next) => {
+  try {
+    const { term, cve, context } = req.body ?? {};
+    if (!term && !cve) return res.status(400).json({ error: 'term or cve required' });
+
+    // TODO: do real work (LLM/DB/etc). Start with a stub:
+    return res.json({ explanation: `Dev stub for ${term || cve}` });
+  } catch (e) {
+    next(e);
+  }
 });
 
 export default app;

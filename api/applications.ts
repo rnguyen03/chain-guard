@@ -49,17 +49,30 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        // Only fetch applications created by this user
-        const applications = await Application.find({ userId }).sort({ createdAt: -1 });
+        // Only fetch applications created by this user and not soft-deleted
+        const applications = await Application.find({ userId, deleted: { $ne: true } }).sort({ createdAt: -1 });
         return res.status(200).json(applications);
       }
 
       case 'POST': {
         // Ensure the userId is set from the authenticated user
-        const newApp = new Application({
-          ...req.body,
-          userId // Override any userId in the request body with the authenticated user's ID
-        });
+        const payload = { ...req.body, userId };
+
+        // If an identical app exists and is soft-deleted, restore it
+        const match = await Application.findOne({ name: payload.name, vendor: payload.vendor, version: payload.version, userId });
+        if (match) {
+          if (match.deleted) {
+            match.deleted = false;
+            match.deletedAt = undefined as any;
+            Object.assign(match, payload);
+            await match.save();
+            return res.status(200).json(match);
+          }
+
+          return res.status(409).json({ message: 'Application already exists' });
+        }
+
+        const newApp = new Application(payload);
         await newApp.save();
         return res.status(201).json(newApp);
       }
@@ -69,13 +82,18 @@ export default async function handler(
         if (!id || typeof id !== 'string') {
           return res.status(400).json({ message: 'Application ID is required' });
         }
-        
-        // Only delete if the application belongs to this user
-        const app = await Application.findOneAndDelete({ _id: id, userId });
+
+        // Only soft-delete if the application belongs to this user
+        const app = await Application.findOne({ _id: id, userId });
         if (!app) {
           return res.status(404).json({ message: 'Application not found or unauthorized' });
         }
-        return res.status(200).json({ message: 'Application deleted successfully' });
+
+        app.deleted = true;
+        app.deletedAt = new Date();
+        await app.save();
+
+        return res.status(200).json({ message: 'Application soft-deleted' });
       }
 
       default:

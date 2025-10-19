@@ -29,6 +29,17 @@ const applicationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+  ,
+  // Soft-delete fields
+  deleted: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
+  deletedAt: {
+    type: Date,
+    default: null
+  }
 }, {
   timestamps: true
 });

@@ -1,284 +1,177 @@
-# ChainGuardia 🛡️# React + TypeScript + Vite
+# ChainGuard 🛡️
 
+> **Real-time supply chain security monitoring with AI-powered vulnerability intelligence**
 
+## Overview
 
-> **"Know when your apps turn against you."**This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ChainGuard is a security dashboard that helps organizations proactively monitor their software inventory and identify vulnerabilities in real-time. The platform aggregates security data from multiple authoritative sources and uses AI to provide actionable insights, helping security teams respond to threats before they can be exploited.
 
+Built in 36 hours during Hack the Valley X, ChainGuard addresses a critical gap in enterprise security: **continuous monitoring of third-party tools**. Even whitelisted applications can become attack vectors when vulnerabilities are discovered post-approval—and most organizations lack the infrastructure to detect these threats in real-time.
 
+## The Problem
 
-# ChainGuardia 🛡️
+Modern organizations rely on dozens of third-party applications—Slack, Figma, Notion, browser extensions, and more. While these tools boost productivity, they also create a expanding attack surface. The challenge isn't just adoption; it's **continuous risk management**:
 
-**Real-time supply chain security monitoring with AI-powered vulnerability intelligence**
+- **Whitelists don't update themselves**: A plugin that was safe last month might be compromised today
+- **Startups lack monitoring resources**: Smaller teams can't track every app manually
+- **Alert fatigue is real**: Security teams need contextualized, prioritized intelligence—not raw CVE dumps
+- **Time-to-response is critical**: The window between vulnerability disclosure and exploitation is shrinking
 
-ChainGuardia is a comprehensive application security platform that helps organizations track their software inventory and identify vulnerabilities in real-time. Built with React, TypeScript, MongoDB, and Google Gemini AI.
+During development, we consulted with a cybersecurity expert who confirmed this is one of the fastest-growing problems in the industry—with no reliable automated solution currently available.
 
-## ✨ Key Features
+**ChainGuard doesn't just detect attacks; it predicts them.**
 
-### 🔍 **Real-Time Security Intelligence** (NEW!)
-- **Multi-Source Threat Feed** - Aggregates from NIST NVD, CISA KEV, and GitHub Security Advisories
-- **AI-Powered Analysis** - Google Gemini analyzes vulnerabilities and provides actionable insights
-- **Impact Matching** - Automatically identifies which of your applications are affected
-- **Risk Assessment** - Multi-framework severity scoring (CVSS, EPSS, business context)
-- **Remediation Guidance** - Specific, prioritized action steps
+## Key Features
 
-### 📦 Application Inventory Management
+### 🔍 Multi-Source Threat Intelligence
+- Aggregates vulnerability data from **NIST NVD**, **CISA KEV**, and **GitHub Security Advisories**
+- Real-time CVE monitoring with automatic inventory matching
+- CVSS-based severity scoring (CRITICAL, HIGH, MEDIUM, LOW)
 
+### 🤖 AI-Powered Analysis
+- **Google Gemini AI** integration for intelligent vulnerability interpretation
+- Transforms complex CVE data into clear, actionable summaries
+- Technical impact assessments with confidence intervals
+- Prioritized remediation recommendations ranked by likelihood and severity
+- Non-technical explanations for cross-functional stakeholder communication
 
----## Deploy Your Own
+### 📊 Application Inventory Management
+- Track software applications across your organization
+- CSV bulk import for rapid onboarding
+- Version tracking and categorization
+- MongoDB persistence with user isolation
 
+### 🔐 Enterprise Security
+- **Auth0** authentication and authorization
+- User-specific data isolation
+- Secure API endpoints with JWT validation
+- OAuth2 bearer token middleware
 
+### � Real-Time Dashboard
+- Live vulnerability statistics and trends
+- Color-coded severity indicators
+- Status tracking (Active, Acknowledged, Mitigated)
+- Responsive design for desktop and mobile
 
-## 🎯 The ProblemDeploy your own Vite project with Vercel.
+## Tech Stack
 
+**Frontend:**
+- React 18 + TypeScript
+- Vite (build tool)
+- Tailwind CSS
+- React Router v6
+- Lucide Icons
 
+**Backend:**
+- Vercel Serverless Functions
+- MongoDB + Mongoose
+- Auth0 (authentication)
+- Google Gemini AI
 
-In today's digital workplace, employees use dozens of third-party apps—from productivity tools to niche SaaS services. While these apps increase efficiency, they also open the door to **supply chain attacks**—where attackers compromise trusted vendors or software updates to infiltrate organizations.[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
+**APIs & Services:**
+- NIST NVD API 2.0
+- CISA Known Exploited Vulnerabilities
+- GitHub Security Advisories
+- Google Generative AI API
 
+**DevOps:**
+- Vercel (deployment)
+- Concurrent dev/server workflow
+- TypeScript strict mode
 
-
-Companies often don't know when a system their employees rely on becomes vulnerable. Even if critical vulnerabilities or breaches are disclosed, organizations struggle to track which apps are affected and respond quickly._Live Example: https://vite-react-example.vercel.app_
-
-
-
----### Deploying From Your Terminal
-
-
-
-## 💡 The SolutionYou can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-
-
-**ChainGuard** is a monitoring platform that proactively scans and aggregates information about the applications employees use. It cross-checks:```shell
-
-$ vercel
-
-- 🔒 **Security databases** (CVE reports, NVD feeds, vendor security advisories)```
-
-- 📰 **Trusted news outlets** and blogs for emerging supply chain attack reports
-- ⚡ **Real-time monitoring** of vulnerabilities affecting your application stack
-
-Whenever an app is flagged as vulnerable, ChainGuard automatically alerts IT/security teams and provides recommended actions.
-
----
-
-## 🚀 How It Works
-
-1. **App Inventory Integration**: Manually add apps or import via CSV to track the applications your organization uses
-2. **Continuous Monitoring**: Uses NVD API and security feeds to monitor CVE databases and vendor advisories
-3. **Intelligent Matching**: Automatically matches vulnerability reports to apps in your inventory
-4. **Actionable Dashboard**: Single pane of glass for CISOs and IT admins to see which vulnerabilities directly impact their workforce
-
----
-
-## ✨ Features
-
-- Track all your applications in one central dashboard
-- CSV import for bulk application onboarding
-- MongoDB-backed persistent storage
-- User-specific data isolation (Auth0 authentication)
-
-### 🔐 Live Vulnerability Scanning
-- Integration with **NIST National Vulnerability Database (NVD)** API 2.0
-- Real-time CVE matching against your application inventory
-- Severity categorization (CRITICAL, HIGH, MEDIUM, LOW)
-- Automatic vulnerability correlation with affected applications
-
-### 🤖 AI-Powered Security Intelligence
-- **Gemini AI Analysis** - Get technical summaries and risk assessments
-- **Multi-Source Aggregation** - NIST NVD, CISA KEV, GitHub Security Advisories
-- **Impact Analytics** - Automatic matching against your application stack
-- **Smart Remediation** - AI-generated action plans with priority ordering
-
-### 📊 Comprehensive Dashboard
-- 📦 **Application Inventory**: Add apps manually or import via CSV
-- 🔍 **Vulnerability Tracking**: See all CVEs affecting your applications
-- 🎨 **Severity Classification**: Color-coded CRITICAL, HIGH, MEDIUM, LOW alerts
-- 📱 **Responsive Design**: Works on desktop, tablet, and mobile
-- 🔔 **Status Management**: Acknowledge and mark vulnerabilities as mitigated
-
----
-
-## 🛠️ Tech Stack
-
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS
-- **Routing**: React Router v6
-- **Icons**: Lucide React
-- **CSV Parsing**: PapaParse
-- **API**: NVD CVE Database API
-- **HTTP Client**: Axios
-
----
-
-## 📦 Installation
-
-### Prerequisites
-
-- Node.js 18+ 
-- npm or yarn
-
-### Setup
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/chain-guard.git
+# Clone repository
+git clone https://github.com/rnguyen03/chain-guard.git
 cd chain-guard
 
 # Install dependencies
 npm install
 
-# Start development server
-npm run dev
+# Configure environment variables
+# Create .env file with:
+# - MongoDB connection string
+# - Auth0 credentials
+# - Google Gemini API key
 
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+# Run Development Server (frontend + backend):
+npm run dev      # Frontend (Vite)
+vercel dev --port 3000   # Backend (Vercel Serverless)
 ```
 
----
+## Architecture
 
-## 🎮 Demo Flow
-
-### Step 1: View Dashboard
-- Navigate to the home page to see the security overview
-- View statistics on total apps, vulnerabilities, and severity breakdown
-
-### Step 2: Add Applications
-- Go to "Applications" tab
-- Click "Add App" to manually add applications (Slack, Zoom, GitHub, etc.)
-- Or click "Import CSV" to bulk upload applications
-
-**Example CSV format:**
-```csv
-name,vendor,version,category
-Slack,Slack Technologies,4.35.0,Communication
-Zoom,Zoom Video Communications,5.15.5,Video Conferencing
-GitHub,GitHub,Enterprise Server 3.10,Development
+```
+┌─────────────┐      ┌──────────────────┐      ┌─────────────┐
+│   React     │─────▶│    Vercel        │─────▶│   MongoDB   │
+│  Frontend   │      │ Serverless API   │      │  Database   │
+└─────────────┘      └──────────────────┘      └─────────────┘
+                            │
+                            ├─────▶ NIST NVD API
+                            ├─────▶ CISA KEV API  
+                            ├─────▶ GitHub API
+                            └─────▶ Google Gemini AI
 ```
 
-### Step 3: Monitor Vulnerabilities
-- Go to "Vulnerabilities" tab
-- See all CVEs affecting your tracked applications
-- Filter by severity level
-- Click "Acknowledge" or "Mark Mitigated" to manage vulnerability status
-
-### Step 4: Simulate Alert
-- The app comes with mock vulnerabilities for Slack, Zoom, and GitHub
-- When you add these apps, you'll see them automatically matched to relevant CVEs
-- Dashboard will update with critical alerts
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 chain-guard/
-├── src/
-│   ├── components/          # React components
-│   │   ├── AppInventory.tsx        # Application management
-│   │   ├── VulnerabilityList.tsx   # Vulnerability display
-│   │   └── DashboardOverview.tsx   # Dashboard stats
-│   ├── services/            # API and business logic
-│   │   └── vulnerabilityService.ts # CVE fetching & matching
-│   ├── types/              # TypeScript interfaces
-│   │   └── index.ts               # Type definitions
-│   ├── App.tsx             # Main application component
-│   ├── main.tsx            # Entry point
-│   └── index.css           # Global styles
-├── public/                 # Static assets
-├── package.json
-├── tailwind.config.js      # Tailwind configuration
-└── vite.config.ts         # Vite configuration
+├── src/                    # Frontend React application
+│   ├── components/         # React components
+│   ├── services/          # API client services
+│   └── types/             # TypeScript definitions
+├── api/                   # Vercel Serverless Functions
+│   ├── applications.ts   # Application CRUD endpoints
+│   ├── vulnerabilities.ts # Vulnerability endpoints
+│   └── security-feed.ts  # Security feed analysis
+├── server/                # Shared backend utilities
+│   ├── config/           # Database configuration
+│   ├── models/           # Mongoose schemas
+│   └── middleware/       # Auth middleware
+└── public/               # Static assets
 ```
 
----
+## Core Functionality
 
-## 🔌 API Integration
+1. **Application Inventory**: Organizations add their software applications (manually or via CSV bulk import)
+2. **Continuous Threat Monitoring**: Backend constantly pulls new intelligence from CVE databases, NIST advisories, and security feeds
+3. **Intelligent Matching**: Automatically correlates published vulnerabilities with your application stack
+4. **AI-Powered Risk Analysis**: Google Gemini evaluates technical impact, business context, and provides confidence scores
+5. **Real-Time Alerts**: Security teams receive instant notifications when threats affect their tools
+6. **Remediation Tracking**: Teams acknowledge alerts and track mitigation progress through resolution
 
-### NVD CVE Database
+**The key differentiator**: ChainGuard combines real-time data aggregation with AI reasoning to transform raw threat intelligence into digestible, actionable insights that even non-technical stakeholders can understand.
 
-ChainGuard integrates with the National Vulnerability Database (NVD) API:
+## Use Cases
 
-```typescript
-// Fetch CVEs from NVD
-const cves = await fetchCVEsFromNVD('slack', 10);
+- **Enterprise Security Teams**: Monitor organization-wide application vulnerabilities
+- **DevSecOps**: Integrate security into CI/CD pipelines
+- **Compliance**: Track and report on vulnerability remediation SLAs
+- **Vendor Risk Management**: Monitor third-party software security
 
-// Match to your applications
-const matched = matchVulnerabilitiesToApps(vulnerabilities, applications);
-```
+## Development Highlights
 
-**Note**: NVD API has rate limits (5 requests per 30 seconds without API key). For production use, register for an API key at https://nvd.nist.gov/developers/request-an-api-key
+- **Type Safety**: Full TypeScript implementation across frontend and backend
+- **Serverless Architecture**: Edge-optimized Vercel Functions for instant scalability
+- **Security First**: Auth0 integration, JWT validation, secure API design
+- **Modern Stack**: React 18, Vercel Serverless, MongoDB 6, latest APIs
+- **AI Integration**: Practical application of LLMs for contextual security analysis
+- **Production Ready**: Zero-config deployment, environment configuration, error handling
+- **Built in 36 hours**: Rapid prototyping with production-quality code architecture
 
----
+## Technical Challenges Solved
 
-## 🎨 Customization
+**Serverless Integration**: Architected backend routes to work seamlessly with Vercel's serverless environment, handling API routing, authentication middleware, and deployment configurations.
 
-### Adding New Vulnerability Sources
+**Multi-Source Data Aggregation**: Built robust pipelines to continuously fetch and normalize threat intelligence from disparate sources (NVD, CISA KEV, GitHub Advisories) with different schemas and rate limits.
 
-Edit `src/services/vulnerabilityService.ts`:
+**AI Context Engineering**: Designed prompts and data structures to help Gemini AI accurately interpret CVE technical data and generate actionable summaries with confidence intervals.
 
-```typescript
-// Add your custom vulnerability source
-export const fetchFromCustomSource = async () => {
-  // Your implementation
-};
-```
-
-### Changing Theme Colors
-
-Edit `tailwind.config.js`:
-
-```javascript
-theme: {
-  extend: {
-    colors: {
-      primary: { /* your colors */ },
-      danger: { /* your colors */ }
-    }
-  }
-}
-```
+**Real-Time State Management**: Implemented efficient data flow between serverless backend, MongoDB persistence, and React frontend to ensure live updates without polling overhead.
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## 📄 License
-
-MIT License - feel free to use this project for your hackathon or production needs!
-
----
-
-## 🏆 Hackathon Notes
-
-This project was built for a 36-hour hackathon with a focus on:
-- ✅ Rapid MVP development
-- ✅ Clean, maintainable code
-- ✅ Professional UI/UX
-- ✅ Real-world problem solving
-- ✅ Scalable architecture
-
-**Future Enhancements:**
-- Backend API with persistent database (MongoDB/PostgreSQL)
-- SSO integration (Okta, Azure AD)
-- Slack/Teams webhook notifications
-- Automated scanning schedules
-- Export reports (PDF/CSV)
-- Multi-tenant support
-- Advanced filtering and search
-
----
-
-## 👥 Team
-
-Built with ❤️ by the ChainGuard team
-
----
-
-**ChainGuard** - Protecting organizations from supply chain attacks, one vulnerability at a time.
+**Built by Ryan Nguyen, Grayson Mongru & Shahmeer Shahid**  
+*Hack the Valley X @ University of Toronto Scarborough*
